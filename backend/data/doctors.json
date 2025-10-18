@@ -1,0 +1,29 @@
+[
+   {
+       "id": 1,
+       "Clinic": "Evex",
+       "Name": "სალომე ბულეიშვილი",
+       "Speciality": "ოფთალმოლოგი",
+       "Address": "ევექსის კლინიკა ისანში. თბილისი, ე.კაკულიას ქუჩა N 1, შესახვევი 1",
+       "Detail_Link": "https://evex.ge/ka/doctor/salome-buleishvili/244",
+       "Image_File": "all_doctors_images\\სალომე_ბულეიშვილი_ოფთალმოლოგი_Evex.jpg"
+   },
+   {
+       "id": 2,
+       "Clinic": "Evex",
+       "Name": "ნელი ლაგურაშვილი",
+       "Speciality": "ენდოკრინოლოგი",
+       "Address": "ევექსის კლინიკა ისანში. თბილისი, ე.კაკულიას ქუჩა N 1, შესახვევი 1",
+       "Detail_Link": "https://evex.ge/ka/doctor/neli-lagurashvili/250",
+       "Image_File": "all_doctors_images\\ნელი_ლაგურაშვილი_ენდოკრინოლოგი_Evex.jpg"
+   },
+   {
+       "id": 3,
+       "Clinic": "Evex",
+       "Name": "ნატო გორდაშვილი",
+       "Speciality": "რადიოლოგი",
+       "Address": "ევექსის კლინიკა ისანში. თბილისი, ე.კაკულიას ქუჩა N 1, შესახვევი 1",
+       "Detail_Link": "https://evex.ge/ka/doctor/nato-gordashvili/251",
+       "Image_File": "all_doctors_images\\ნატო_გორდაშვილი_რადიოლოგი_Evex.jpg"
+   }
+]

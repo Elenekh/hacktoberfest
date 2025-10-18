@@ -1,0 +1,14 @@
+[
+  {
+    "id": "9233b261-1a7b-46f6-bb74-46cf18a58d84",
+    "name": "elenekh",
+    "email": "gplay.elekh@gmail.com",
+    "password": "pbkdf2_sha256$1000000$rxgAFPURvdKhGjgmN12blv$WBz/F3t5uzoW74o2rvQG+piiDXBGZXOGGpZGGusx00M=",
+    "role": "patient",
+    "age": "30",
+    "gender": "female",
+    "insurance": "cigna",
+    "specialty": "",
+    "clinic": ""
+  }
+]
