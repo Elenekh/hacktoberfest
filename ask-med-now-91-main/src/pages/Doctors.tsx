@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -57,11 +57,27 @@ const Doctors = () => {
     fetchDoctors();
   }, []);
 
+  // Build unique specialties from loaded doctors (case-insensitive dedupe, preserve first-seen casing)
+  const specialtyOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    doctors.forEach(d => {
+      const s = (d.specialty || "").trim();
+      if (!s) return;
+      const key = s.toLowerCase();
+      if (!map.has(key)) map.set(key, s);
+    });
+    return Array.from(map.values());
+  }, [doctors]);
+
   const filteredDoctors = doctors.filter(doctor => {
     const matchesSearch = searchQuery === "" || 
       doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
+
+    const matchesSpecialty = specialtyFilter === "all" ||
+      (doctor.specialty || "").toLowerCase() === specialtyFilter.toLowerCase();
+
+    return matchesSearch && matchesSpecialty;
   });
 
   return (
@@ -106,7 +122,7 @@ const Doctors = () => {
                   <SelectValue placeholder="All Providers" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
-                  <SelectItem value="all">ყველა პროვაიდერი</SelectItem>
+                  <SelectItem value="all">ყველა პროვაიდერები</SelectItem>
                   <SelectItem value="blue-cross"></SelectItem>
                   <SelectItem value="aetna">Aetna</SelectItem>
                   <SelectItem value="united">United Healthcare</SelectItem>
@@ -123,9 +139,9 @@ const Doctors = () => {
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
                   <SelectItem value="all">All Specialties</SelectItem>
-                  <SelectItem value="cardiology">Cardiology</SelectItem>
-                  <SelectItem value="dermatology">Dermatology</SelectItem>
-                  <SelectItem value="general">General Practice</SelectItem>
+                  {specialtyOptions.map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -135,33 +151,40 @@ const Doctors = () => {
         {/* Doctors List */}
         {loading && <p className="mb-4 text-sm text-muted-foreground">ვეძებთ ექიმებს...</p>}
         {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-[1px] md:grid-cols-2 lg:grid-cols-3 justify-center justify-items-center">
           {filteredDoctors.map((doctor) => (
-            <Card key={doctor.id} className="bg-gradient-card p-6 shadow-card transition-smooth hover:shadow-elevated">
-              {doctor.image && (
-                <div className="mb-4 flex justify-center">
-                  <img src={doctor.image} alt={doctor.name} className="h-32 w-32 object-cover rounded-full border" />
+            <Card key={doctor.id} className="bg-gradient-card w-[300px] h-[500px] p-3 shadow-card transition-smooth hover:shadow-elevated flex flex-col justify-between">
+              {doctor.image ? (
+                <div className="overflow-hidden rounded-lg h-[220px] w-full flex-shrink-0">
+                  <img src={doctor.image} alt={doctor.name} className="w-full h-full object-cover object-center" />
+                </div>
+              ) : (
+                <div className="h-[220px] w-full flex items-center justify-center bg-muted rounded-lg">
+                  <span className="text-lg font-medium text-muted-foreground">{doctor.name.charAt(0)}</span>
                 </div>
               )}
-              <div className="mb-4">
-                <h3 className="mb-1 text-xl font-semibold text-card-foreground">{doctor.name}</h3>
+
+              <div className="mb-4 flex-grow mt-4 overflow-hidden">
+                <h3 className="mb-1 text-lg font-semibold text-card-foreground">{doctor.name}</h3>
                 <p className="text-sm font-medium text-primary">{doctor.specialty}</p>
-              </div>
-              <div className="mb-4 space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>{doctor.clinic}</span>
-                </div>
-                {doctor.address && (
+
+                <div className="mt-3 space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">მისამართი:</span>
-                    <span>{doctor.address}</span>
+                    <MapPin className="h-4 w-4" />
+                    <span>{doctor.clinic}</span>
                   </div>
-                )}
+                  {doctor.address && (
+                    <div className="flex items-center gap-1">
+                      <span className="font-medium">მისამართი:</span>
+                      <span>{doctor.address}</span>
+                    </div>
+                  )}
+                </div>
               </div>
+
               <Button 
                 variant="hero" 
-                className="w-full"
+                className="w-full mt-2"
                 onClick={() => navigate(`/doctors/${doctor.id}`)}
               >
                 დეტალების ნახვა
